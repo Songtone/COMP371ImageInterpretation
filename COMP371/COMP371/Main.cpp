@@ -161,6 +161,9 @@ int main()
 
 	glUseProgram(shaderProgram);
 
+	//Show the image that will be used
+	CImg<float> picture("depth.bmp");
+	CImgDisplay main_disp(picture, "The Depth Picture");
 	
 
 	GLuint projectionLoc = glGetUniformLocation(shaderProgram, "projection_matrix");
