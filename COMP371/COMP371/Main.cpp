@@ -25,6 +25,9 @@ glm::vec3 camera_position;
 glm::vec3 triangle_scale;
 glm::mat4 projection_matrix;
 
+float x;
+float y;
+
 // Constant vectors
 const glm::vec3 center(0.0f, 0.0f, 0.0f);
 const glm::vec3 up(0.0f, 1.0f, 0.0f);
@@ -71,8 +74,8 @@ int main()
 	// Initialize GLEW to setup the OpenGL Function pointers
 	if (glewInit() != GLEW_OK)
 	{
-		std::cout << "Failed to initialize GLEW" << std::endl;
-		return -1;
+	std::cout << "Failed to initialize GLEW" << std::endl;
+	return -1;
 	}
 
 	// Define the viewport dimensions
@@ -162,9 +165,35 @@ int main()
 	glUseProgram(shaderProgram);
 
 	//Show the image that will be used
-	CImg<float> picture("depth.bmp");
-	CImgDisplay main_disp(picture, "The Depth Picture");
+	CImg<float> image("depth.bmp");
+	CImgDisplay main_disp(image, "The Depth Picture");
+
+	cout << image.size() << endl;
+	//Pixel Data
 	
+
+	//iteration through the image pixels
+	for (int i = 0; i <= image.size(); i++){
+
+}
+
+	GLuint VAO, VBO;
+	//glGenVertexArrays(1, &VAO);
+	//glGenBuffers(1, &VBO);
+
+	//// Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
+	//glBindVertexArray(VAO);
+
+	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	//glBufferData(GL_ARRAY_BUFFER, picture.size() * sizeof(glm::vec3), &picture.front(), GL_STATIC_DRAW);
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	//glEnableVertexAttribArray(0);
+
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	//glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
+
+
 
 	GLuint projectionLoc = glGetUniformLocation(shaderProgram, "projection_matrix");
 	GLuint viewMatrixLoc = glGetUniformLocation(shaderProgram, "view_matrix");
@@ -192,7 +221,7 @@ int main()
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection_matrix));
 
 		/*glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+		glDrawArrays(GL_TRIANGLES, 0, picture.size());
 		glBindVertexArray(0);*/
 
 		// Swap the screen buffers
