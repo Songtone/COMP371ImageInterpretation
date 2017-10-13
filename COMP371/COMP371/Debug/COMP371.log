@@ -2,9 +2,6 @@
   Main.cpp
 c:\program files (x86)\windows kits\10\include\10.0.15063.0\shared\minwindef.h(130): warning C4005: 'APIENTRY': macro redefinition
   c:\users\songt\desktop\comp371\comp371a2image\comp371\glfw\glfw3.h(85): note: see previous definition of 'APIENTRY'
-c:\users\songt\desktop\comp371\comp371a2image\comp371\comp371\main.cpp(176): warning C4018: '<=': signed/unsigned mismatch
-c:\users\songt\desktop\comp371\comp371a2image\comp371\comp371\main.cpp(180): warning C4101: 'VBO': unreferenced local variable
-c:\users\songt\desktop\comp371\comp371a2image\comp371\comp371\main.cpp(180): warning C4101: 'VAO': unreferenced local variable
 LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/FORCE' specification
   COMP371.vcxproj -> C:\Users\songt\Desktop\COMP371\COMP371A2Image\COMP371\Debug\COMP371.exe
   COMP371.vcxproj -> C:\Users\songt\Desktop\COMP371\COMP371A2Image\COMP371\Debug\COMP371.pdb (Partial PDB)
