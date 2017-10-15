@@ -253,7 +253,7 @@ int main()
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection_matrix));
 
 		glBindVertexArray(VAO_pic);
-		glDrawArrays(GL_TRIANGLES, 0, pictureData.size());
+		glDrawArrays(GL_POINTS, 0, pictureData.size());
 		glBindVertexArray(0);
 
 
@@ -281,10 +281,16 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		cameraY = cameraY - 10.0f;
 	}
 	if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
-		cameraX = cameraX + 0.2f;
+		cameraX = cameraX + 10.0f;
 	}
 	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
-		cameraX = cameraX - 0.2f;
+		cameraX = cameraX - 10.0f;
+	}
+	if (key == GLFW_KEY_U && action == GLFW_PRESS) {
+		cameraZ = cameraZ + 10.0f;
+	}
+	if (key == GLFW_KEY_J && action == GLFW_PRESS) {
+		cameraZ = cameraZ - 10.0f;
 	}
 }
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
