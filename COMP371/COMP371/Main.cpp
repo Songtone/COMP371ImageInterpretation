@@ -26,8 +26,8 @@ glm::vec3 triangle_scale;
 glm::mat4 projection_matrix;
 
 float cameraX = 0.0f;
-float cameraY = 0.0f;
-float cameraZ = 2.0f;
+float cameraY = 10.0f;
+float cameraZ = 10.0f;
 float panning = 0.0f;
 
 // Constant vectors
@@ -185,21 +185,21 @@ int main()
 		}
 }
 
-	//GLuint VAO_pic, VBO_pic;
-	//glGenVertexArrays(1, &VAO_pic);
-	//glGenBuffers(1, &VBO_pic);
+	GLuint VAO_pic, VBO_pic;
+	glGenVertexArrays(1, &VAO_pic);
+	glGenBuffers(1, &VBO_pic);
 
-	//// Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
-	//glBindVertexArray(VAO_pic);
+	// Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
+	glBindVertexArray(VAO_pic);
 
-	//glBindBuffer(GL_ARRAY_BUFFER, VBO_pic);
-	//glBufferData(GL_ARRAY_BUFFER, picture.size() * sizeof(glm::vec3), &picture.front(), GL_STATIC_DRAW);
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-	//glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_pic);
+	glBufferData(GL_ARRAY_BUFFER, pictureData.size() * sizeof(glm::vec3), &pictureData.front(), GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
 
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	//glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
+	glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
 
 	float vertices[] = {//triangle coordinates
 		-0.5f, -0.5f, 0.0f,
@@ -252,14 +252,14 @@ int main()
 		glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(view_matrix));
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection_matrix));
 
-		/*glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, picture.size());
-		glBindVertexArray(0);*/
-
-
-		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glBindVertexArray(VAO_pic);
+		glDrawArrays(GL_TRIANGLES, 0, pictureData.size());
 		glBindVertexArray(0);
+
+
+		/*glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glBindVertexArray(0);*/
 		// Swap the screen buffers
 		
 		glfwSwapBuffers(window);
@@ -275,10 +275,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	std::cout << key << std::endl;
 
 	if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
-		cameraY = cameraY + 0.2f;
+		cameraY = cameraY + 10.0f;
 	}
 	if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
-		cameraY = cameraY - 0.2f;
+		cameraY = cameraY - 10.0f;
 	}
 	if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
 		cameraX = cameraX + 0.2f;
