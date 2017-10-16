@@ -25,9 +25,12 @@ glm::vec3 camera_position;
 glm::vec3 triangle_scale;
 glm::mat4 projection_matrix;
 
-float cameraX = 950.0f;
-float cameraY = 540.0f;
-float cameraZ = 1670.0f;
+//variables
+int skipSize;
+int skipOption = 0;
+float cameraX = 550.0f;
+float cameraY = 520.0f;
+float cameraZ = 530.0f;
 float panning = 0.0f;
 
 // Constant vectors
@@ -40,9 +43,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 void cursor_callback(GLFWwindow* window, double xpos, double ypos);
-
-
-// Is called whenever a key is pressed/released via GLFW
 
 
 // The MAIN function, from here we start the application and run the game loop
@@ -80,110 +80,110 @@ int main()
 	return -1;
 	}
 
-	// Define the viewport dimensions
-	int width, height;
-	glfwGetFramebufferSize(window, &width, &height);
+// Define the viewport dimensions
+int width, height;
+glfwGetFramebufferSize(window, &width, &height);
 
-	glViewport(0, 0, width, height);
+glViewport(0, 0, width, height);
 
-	projection_matrix = glm::perspective(45.0f, (GLfloat)width / (GLfloat)height, 0.0f, 100.0f);
+projection_matrix = glm::perspective(45.0f, (GLfloat)width / (GLfloat)height, 0.0f, 100.0f);
 
-	// Build and compile our shader program
-	// Vertex shader
+// Build and compile our shader program
+// Vertex shader
 
-	// Read the Vertex Shader code from the file
-	string vertex_shader_path = "vertex.shader";
-	string VertexShaderCode;
-	std::ifstream VertexShaderStream(vertex_shader_path, ios::in);
+// Read the Vertex Shader code from the file
+string vertex_shader_path = "vertex.shader";
+string VertexShaderCode;
+std::ifstream VertexShaderStream(vertex_shader_path, ios::in);
 
-	if (VertexShaderStream.is_open()) {
-		string Line = "";
-		while (getline(VertexShaderStream, Line))
-			VertexShaderCode += "\n" + Line;
-		VertexShaderStream.close();
-	}
-	else {
-		printf("Impossible to open %s. Are you in the right directory ?\n", vertex_shader_path.c_str());
-		getchar();
-		exit(-1);
-	}
-
-	// Read the Fragment Shader code from the file
-	string fragment_shader_path = "fragment.shader";
-	std::string FragmentShaderCode;
-	std::ifstream FragmentShaderStream(fragment_shader_path, std::ios::in);
-
-	if (FragmentShaderStream.is_open()) {
-		std::string Line = "";
-		while (getline(FragmentShaderStream, Line))
-			FragmentShaderCode += "\n" + Line;
-		FragmentShaderStream.close();
-	}
-	else {
-		printf("Impossible to open %s. Are you in the right directory?\n", fragment_shader_path.c_str());
-		getchar();
-		exit(-1);
-	}
-
-	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	char const * VertexSourcePointer = VertexShaderCode.c_str();
-	glShaderSource(vertexShader, 1, &VertexSourcePointer, NULL);
-	glCompileShader(vertexShader);
-	// Check for compile time errors
-	GLint success;
-	GLchar infoLog[512];
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-	// Fragment shader
-	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	char const * FragmentSourcePointer = FragmentShaderCode.c_str();
-	glShaderSource(fragmentShader, 1, &FragmentSourcePointer, NULL);
-	glCompileShader(fragmentShader);
-	// Check for compile time errors
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-	// Link shaders
-	GLuint shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-	// Check for linking errors
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-	if (!success) {
-		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-	}
-	glDeleteShader(vertexShader); //free up memory
-	glDeleteShader(fragmentShader);
-
-	glUseProgram(shaderProgram);
-
-	//Show the picture that will be used
-	CImg<float> picture("depth.bmp");
-	CImgDisplay main_disp(picture, "The Depth Picture");
-
-	cout << picture.size() << endl;
-	//Pixel Data
-	vector <glm::vec3> pictureData;
-
-	//iteration through the picture pixels
-	int x = (0 - picture.width() / 2);
-	int z = (0 - picture.height() / 2);
-	for (CImg<float>::iterator i = picture.begin(); i < picture.end(); i++){
-		pictureData.emplace_back(glm::vec3(x++, *i, z));
-		if (x == picture.width()) {
-			x = (0 - picture.width() / 2);
-			z += 1;
-		}
+if (VertexShaderStream.is_open()) {
+	string Line = "";
+	while (getline(VertexShaderStream, Line))
+		VertexShaderCode += "\n" + Line;
+	VertexShaderStream.close();
 }
+else {
+	printf("Impossible to open %s. Are you in the right directory ?\n", vertex_shader_path.c_str());
+	getchar();
+	exit(-1);
+}
+
+// Read the Fragment Shader code from the file
+string fragment_shader_path = "fragment.shader";
+std::string FragmentShaderCode;
+std::ifstream FragmentShaderStream(fragment_shader_path, std::ios::in);
+
+if (FragmentShaderStream.is_open()) {
+	std::string Line = "";
+	while (getline(FragmentShaderStream, Line))
+		FragmentShaderCode += "\n" + Line;
+	FragmentShaderStream.close();
+}
+else {
+	printf("Impossible to open %s. Are you in the right directory?\n", fragment_shader_path.c_str());
+	getchar();
+	exit(-1);
+}
+
+GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+char const * VertexSourcePointer = VertexShaderCode.c_str();
+glShaderSource(vertexShader, 1, &VertexSourcePointer, NULL);
+glCompileShader(vertexShader);
+// Check for compile time errors
+GLint success;
+GLchar infoLog[512];
+glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+if (!success)
+{
+	glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+	std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+}
+// Fragment shader
+GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+char const * FragmentSourcePointer = FragmentShaderCode.c_str();
+glShaderSource(fragmentShader, 1, &FragmentSourcePointer, NULL);
+glCompileShader(fragmentShader);
+// Check for compile time errors
+glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+if (!success)
+{
+	glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+	std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+}
+// Link shaders
+GLuint shaderProgram = glCreateProgram();
+glAttachShader(shaderProgram, vertexShader);
+glAttachShader(shaderProgram, fragmentShader);
+glLinkProgram(shaderProgram);
+// Check for linking errors
+glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+if (!success) {
+	glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+	std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+}
+glDeleteShader(vertexShader); //free up memory
+glDeleteShader(fragmentShader);
+
+glUseProgram(shaderProgram);
+
+//Show the picture that will be used
+CImg<float> picture("depth.bmp");
+CImgDisplay main_disp(picture, "The Depth Picture");
+
+cout << picture.size() << endl;
+//Pixel Data
+
+
+//iteration through the picture pixels without skips
+vector <glm::vec3> pictureData;
+
+for (int x = (0 - picture.width() / 2); x < (picture.width()) / 2; x++) {
+	for (int z = (0 - picture.height() / 2); z < (picture.height()) / 2; z++){
+		float height = static_cast<float>(*picture.data(x + (picture.width() / 2), z + (picture.height() / 2)));
+		pictureData.emplace_back(glm::vec3(x, height, z));
+	}
+}
+	
 
 	GLuint VAO_pic, VBO_pic;
 	glGenVertexArrays(1, &VAO_pic);
@@ -202,28 +202,39 @@ int main()
 	glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
 
 
-	//test triangle
-	float vertices[] = {//triangle coordinates
-		-0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		0.0f, 0.5f, 0.0f
-	};
 
-	glm::vec3 triposition[]{
-		glm::vec3(2.0f, 5.0f, -15.0f)
-	};
+	//iteration through the picture pixels with skips
+	//vector <glm::vec3> pictureDataSkip;
 
-	unsigned int VBO;
-	unsigned int VAO;
-	glGenBuffers(1, &VBO);
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
+	//cout << "What is the skip-size desired?" << endl;
+	//cin >> skipSize;
+	//
+	//int p = (0 - picture.width() / 2);
+	//int q = (0 - picture.height() / 2);
+	//for (CImg<float>::iterator i = picture.begin(); i < picture.end(); i + skipSize) {
+	//	pictureDataSkip.emplace_back(glm::vec3(p++, *i, q));
+	//	if (p == picture.width()) {
+	//		p = (0 - picture.width() / 2);
+	//		q += 1;
+	//	}
+	//}
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	//GLuint VAO_skipSize, VBO_skipSize;
+	//glGenVertexArrays(1, &VAO_skipSize);
+	//glGenBuffers(1, &VBO_skipSize);
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
+	//// Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
+	//glBindVertexArray(VAO_skipSize);
+
+	//glBindBuffer(GL_ARRAY_BUFFER, VBO_skipSize);
+	//glBufferData(GL_ARRAY_BUFFER, pictureDataSkip.size() * sizeof(glm::vec3), &pictureDataSkip.front(), GL_STATIC_DRAW);
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	//glEnableVertexAttribArray(0);
+
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	//glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
+
 
 	GLuint projectionLoc = glGetUniformLocation(shaderProgram, "projection_matrix");
 	GLuint viewMatrixLoc = glGetUniformLocation(shaderProgram, "view_matrix");
@@ -241,9 +252,9 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glm::vec3 eye(cameraX, cameraY, cameraZ);
-		cout << "X" << cameraX << endl;
-		cout << "Y" << cameraY << endl;
-		cout << "Z" << cameraZ << endl;
+		cout << "x" << cameraX << endl;
+		cout << "y" << cameraY << endl;
+		cout << "z" << cameraZ << endl;
 		glm::mat4 view_matrix;
 		view_matrix = glm::lookAt(eye, center, up);
 
@@ -254,15 +265,17 @@ int main()
 		glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(view_matrix));
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection_matrix));
 
-		glBindVertexArray(VAO_pic);
-		glDrawArrays(GL_POINTS, 0, pictureData.size());
-		glBindVertexArray(0);
+		/*if (skipOption == 0) {*/
+			glBindVertexArray(VAO_pic);
+			glDrawArrays(GL_POINTS, 0, pictureData.size());
+			glBindVertexArray(0);
+	/*	}else if(skipOption == 1){
+			glBindVertexArray(VAO_skipSize);
+			glDrawArrays(GL_POINTS, 0, pictureDataSkip.size());
+			glBindVertexArray(0);
+		}
+*/
 
-
-		/*glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-		glBindVertexArray(0);*/
-		// Swap the screen buffers
 		
 		glfwSwapBuffers(window);
 	}
@@ -293,6 +306,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 	if (key == GLFW_KEY_U && action == GLFW_PRESS) {
 		cameraZ = cameraZ - 10.0f;
+	}
+	if (key == GLFW_KEY_M && action == GLFW_PRESS) {
+		skipOption = 0;
+	}
+	if (key == GLFW_KEY_N && action == GLFW_PRESS) {
+		skipOption = 1;
 	}
 }
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
