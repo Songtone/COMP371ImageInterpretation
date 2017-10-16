@@ -28,6 +28,7 @@ glm::mat4 projection_matrix;
 //variables
 int skipSize;
 int skipOption = 1;
+int skipAgain = 0;
 int polygonShape = 0;
 float cameraX = 550.0f;
 float cameraY = 520.0f;
@@ -177,6 +178,9 @@ int main()
 
 	//iteration through the picture pixels without skips
 	vector <glm::vec3> pictureData;
+	vector <glm::vec3> pictureDataHigh;
+	vector <glm::vec3> pictureDataMedium;
+	vector <glm::vec3> pictureDataLow;
 	//cout << "What is the skip-size desired?" << endl;
 	//cin >> skipSize;
 
@@ -184,13 +188,27 @@ int main()
 		for (int z = (0 - picture.height() / 2); z < (picture.height()) / 2; z++) {
 			float height = static_cast<float>(*picture.data(x + (picture.width() / 2), z + (picture.height() / 2)));
 			pictureData.emplace_back(glm::vec3(x, height, z));
+			/*if (height < 70) {
+				pictureDataLow.emplace_back(glm::vec3(0.2, 0.0, 0.7));
+			}
+			if (height >= 70 && height < 150) {
+				pictureDataMedium.emplace_back(glm::vec3(0.6, 0.2, 0.3));
+			}
+			if (height >= 150) {
+				pictureDataHigh.emplace_back(glm::vec3(0.3, 0.8, 0.0));
+			}*/
+			
 		}
 	}
 
 
-	GLuint VAO_pic, VBO_pic;
+	GLuint VAO_pic, VBO_pic/*, VBO_pic_high, VBO_pic_medium, VBO_pic_low*/;
 	glGenVertexArrays(1, &VAO_pic);
 	glGenBuffers(1, &VBO_pic);
+	/*glGenBuffers(1, &VBO_pic_high);
+	glGenBuffers(1, &VBO_pic_medium);
+	glGenBuffers(1, &VBO_pic_low);
+*/
 
 	// Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
 	glBindVertexArray(VAO_pic);
@@ -199,6 +217,21 @@ int main()
 	glBufferData(GL_ARRAY_BUFFER, pictureData.size() * sizeof(glm::vec3), &pictureData.front(), GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
+
+	/*glBindBuffer(GL_ARRAY_BUFFER, VBO_pic_high);
+	glBufferData(GL_ARRAY_BUFFER, pictureDataHigh.size() * sizeof(glm::vec3), &pictureDataHigh.front(), GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_pic_medium);
+	glBufferData(GL_ARRAY_BUFFER, pictureDataMedium.size() * sizeof(glm::vec3), &pictureDataMedium.front(), GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_pic_low);
+	glBufferData(GL_ARRAY_BUFFER, pictureDataLow.size() * sizeof(glm::vec3), &pictureDataLow.front(), GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);*/
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -245,6 +278,35 @@ int main()
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
+		if (skipAgain == 1) {//to ask the user a skip size while program is running
+			vector <glm::vec3> pictureDataSkip;
+			cout << "What is the skip-size desired?" << endl;
+			cin >> skipSize;
+
+			for (int x = (0 - picture.width() / 2); x < (picture.width()) / 2; x += skipSize) {
+				for (int z = (0 - picture.height() / 2); z < (picture.height()) / 2; z += skipSize) {
+					float height = static_cast<float>(*picture.data(x + (picture.width() / 2), z + (picture.height() / 2)));
+					pictureDataSkip.emplace_back(glm::vec3(x, height, z));
+				}
+			}
+
+			GLuint VAO_skipSize, VBO_skipSize;
+			glGenVertexArrays(1, &VAO_skipSize);
+			glGenBuffers(1, &VBO_skipSize);
+
+			// Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
+			glBindVertexArray(VAO_skipSize);
+
+			glBindBuffer(GL_ARRAY_BUFFER, VBO_skipSize);
+			glBufferData(GL_ARRAY_BUFFER, pictureDataSkip.size() * sizeof(glm::vec3), &pictureDataSkip.front(), GL_STATIC_DRAW);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+			glEnableVertexAttribArray(0);
+
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+			glBindVertexArray(0);
+			skipAgain = 0;// Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
+		}
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
 
@@ -269,7 +331,7 @@ int main()
 
 
 		if (skipOption == 0) {
-			glUniform1i(object_type_loc, 0);
+			
 			glBindVertexArray(VAO_pic);
 			if (polygonShape == 0) {
 				glDrawArrays(GL_POINTS, 0, pictureData.size());
@@ -280,7 +342,7 @@ int main()
 			glBindVertexArray(0);
 		}
 		if (skipOption == 1) {
-			glUniform1i(object_type_loc, 0);
+			
 			glBindVertexArray(VAO_skipSize);
 			if (polygonShape == 0) {
 				glDrawArrays(GL_POINTS, 0, pictureDataSkip.size());
@@ -337,6 +399,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 	if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS) {
 		skipOption = 0;
+		skipAgain = 1;
 		polygonShape = 0;
 		cameraX = 550.0f;
 		cameraY = 520.0f;
