@@ -1,4 +1,7 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (COMP371_Lab3.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Main.cpp
+c:\program files (x86)\windows kits\10\include\10.0.15063.0\shared\minwindef.h(130): warning C4005: 'APIENTRY': macro redefinition
+  c:\users\songt\desktop\comp371\comp371a2image\comp371\glfw\glfw3.h(85): note: see previous definition of 'APIENTRY'
 LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/FORCE' specification
   COMP371.vcxproj -> C:\Users\songt\Desktop\COMP371\COMP371A2Image\COMP371\Debug\COMP371.exe
   COMP371.vcxproj -> C:\Users\songt\Desktop\COMP371\COMP371A2Image\COMP371\Debug\COMP371.pdb (Partial PDB)

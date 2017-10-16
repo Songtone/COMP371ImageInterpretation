@@ -176,6 +176,8 @@ cout << picture.size() << endl;
 
 //iteration through the picture pixels without skips
 vector <glm::vec3> pictureData;
+//cout << "What is the skip-size desired?" << endl;
+//cin >> skipSize;
 
 for (int x = (0 - picture.width() / 2); x < (picture.width()) / 2; x++) {
 	for (int z = (0 - picture.height() / 2); z < (picture.height()) / 2; z++){
@@ -204,36 +206,33 @@ for (int x = (0 - picture.width() / 2); x < (picture.width()) / 2; x++) {
 
 
 	//iteration through the picture pixels with skips
-	//vector <glm::vec3> pictureDataSkip;
+	vector <glm::vec3> pictureDataSkip;
 
-	//cout << "What is the skip-size desired?" << endl;
-	//cin >> skipSize;
-	//
-	//int p = (0 - picture.width() / 2);
-	//int q = (0 - picture.height() / 2);
-	//for (CImg<float>::iterator i = picture.begin(); i < picture.end(); i + skipSize) {
-	//	pictureDataSkip.emplace_back(glm::vec3(p++, *i, q));
-	//	if (p == picture.width()) {
-	//		p = (0 - picture.width() / 2);
-	//		q += 1;
-	//	}
-	//}
+	cout << "What is the skip-size desired?" << endl;
+	cin >> skipSize;
+	
+	for (int x = (0 - picture.width() / 2); x < (picture.width()) / 2; x+=skipSize) {
+		for (int z = (0 - picture.height() / 2); z < (picture.height()) / 2; z++) {
+			float height = static_cast<float>(*picture.data(x + (picture.width() / 2), z + (picture.height() / 2)));
+			pictureDataSkip.emplace_back(glm::vec3(x, height, z));
+		}
+	}
 
-	//GLuint VAO_skipSize, VBO_skipSize;
-	//glGenVertexArrays(1, &VAO_skipSize);
-	//glGenBuffers(1, &VBO_skipSize);
+	GLuint VAO_skipSize, VBO_skipSize;
+	glGenVertexArrays(1, &VAO_skipSize);
+	glGenBuffers(1, &VBO_skipSize);
 
-	//// Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
-	//glBindVertexArray(VAO_skipSize);
+	// Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
+	glBindVertexArray(VAO_skipSize);
 
-	//glBindBuffer(GL_ARRAY_BUFFER, VBO_skipSize);
-	//glBufferData(GL_ARRAY_BUFFER, pictureDataSkip.size() * sizeof(glm::vec3), &pictureDataSkip.front(), GL_STATIC_DRAW);
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-	//glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_skipSize);
+	glBufferData(GL_ARRAY_BUFFER, pictureDataSkip.size() * sizeof(glm::vec3), &pictureDataSkip.front(), GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
 
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	//glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
+	glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
 
 
 	GLuint projectionLoc = glGetUniformLocation(shaderProgram, "projection_matrix");
@@ -252,9 +251,9 @@ for (int x = (0 - picture.width() / 2); x < (picture.width()) / 2; x++) {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glm::vec3 eye(cameraX, cameraY, cameraZ);
-		cout << "x" << cameraX << endl;
+		/*cout << "x" << cameraX << endl;
 		cout << "y" << cameraY << endl;
-		cout << "z" << cameraZ << endl;
+		cout << "z" << cameraZ << endl;*/
 		glm::mat4 view_matrix;
 		view_matrix = glm::lookAt(eye, center, up);
 
@@ -264,17 +263,19 @@ for (int x = (0 - picture.width() / 2); x < (picture.width()) / 2; x++) {
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(model_matrix));
 		glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(view_matrix));
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection_matrix));
+		cout << skipOption << "HEHEHE" << endl;
 
-		/*if (skipOption == 0) {*/
+		if (skipOption == 0) {
 			glBindVertexArray(VAO_pic);
 			glDrawArrays(GL_POINTS, 0, pictureData.size());
 			glBindVertexArray(0);
-	/*	}else if(skipOption == 1){
+		}
+		if(skipOption == 1){
 			glBindVertexArray(VAO_skipSize);
 			glDrawArrays(GL_POINTS, 0, pictureDataSkip.size());
 			glBindVertexArray(0);
 		}
-*/
+
 
 		
 		glfwSwapBuffers(window);
