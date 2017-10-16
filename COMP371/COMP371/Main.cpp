@@ -19,15 +19,15 @@ using namespace std;
 using namespace cimg_library;
 
 // Window dimensions
-const GLuint WIDTH = 800, HEIGHT = 600;
+const GLuint WIDTH = 1200, HEIGHT = 1000;
 
 glm::vec3 camera_position;
 glm::vec3 triangle_scale;
 glm::mat4 projection_matrix;
 
-float cameraX = 0.0f;
-float cameraY = 10.0f;
-float cameraZ = 10.0f;
+float cameraX = 950.0f;
+float cameraY = 540.0f;
+float cameraZ = 1670.0f;
 float panning = 0.0f;
 
 // Constant vectors
@@ -201,6 +201,8 @@ int main()
 
 	glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
 
+
+	//test triangle
 	float vertices[] = {//triangle coordinates
 		-0.5f, -0.5f, 0.0f,
 		0.5f, -0.5f, 0.0f,
@@ -235,13 +237,13 @@ int main()
 
 		// Render
 		// Clear the colorbuffer
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glm::vec3 center(cameraX, cameraY, 0.0f);
-		glm::vec3 up(0.0f, 1.0f, 0.0f);
 		glm::vec3 eye(cameraX, cameraY, cameraZ);
-
+		cout << "X" << cameraX << endl;
+		cout << "Y" << cameraY << endl;
+		cout << "Z" << cameraZ << endl;
 		glm::mat4 view_matrix;
 		view_matrix = glm::lookAt(eye, center, up);
 
@@ -286,10 +288,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
 		cameraX = cameraX - 10.0f;
 	}
-	if (key == GLFW_KEY_U && action == GLFW_PRESS) {
+	if (key == GLFW_KEY_J && action == GLFW_PRESS) {
 		cameraZ = cameraZ + 10.0f;
 	}
-	if (key == GLFW_KEY_J && action == GLFW_PRESS) {
+	if (key == GLFW_KEY_U && action == GLFW_PRESS) {
 		cameraZ = cameraZ - 10.0f;
 	}
 }
