@@ -27,7 +27,8 @@ glm::mat4 projection_matrix;
 
 //variables
 int skipSize;
-int skipOption = 0;
+int skipOption = 1;
+int polygonShape = 0;
 float cameraX = 550.0f;
 float cameraY = 520.0f;
 float cameraZ = 530.0f;
@@ -76,116 +77,116 @@ int main()
 	// Initialize GLEW to setup the OpenGL Function pointers
 	if (glewInit() != GLEW_OK)
 	{
-	std::cout << "Failed to initialize GLEW" << std::endl;
-	return -1;
+		std::cout << "Failed to initialize GLEW" << std::endl;
+		return -1;
 	}
 
-// Define the viewport dimensions
-int width, height;
-glfwGetFramebufferSize(window, &width, &height);
+	// Define the viewport dimensions
+	int width, height;
+	glfwGetFramebufferSize(window, &width, &height);
 
-glViewport(0, 0, width, height);
+	glViewport(0, 0, width, height);
 
-projection_matrix = glm::perspective(45.0f, (GLfloat)width / (GLfloat)height, 0.0f, 100.0f);
+	projection_matrix = glm::perspective(45.0f, (GLfloat)width / (GLfloat)height, 0.0f, 100.0f);
 
-// Build and compile our shader program
-// Vertex shader
+	// Build and compile our shader program
+	// Vertex shader
 
-// Read the Vertex Shader code from the file
-string vertex_shader_path = "vertex.shader";
-string VertexShaderCode;
-std::ifstream VertexShaderStream(vertex_shader_path, ios::in);
+	// Read the Vertex Shader code from the file
+	string vertex_shader_path = "vertex.shader";
+	string VertexShaderCode;
+	std::ifstream VertexShaderStream(vertex_shader_path, ios::in);
 
-if (VertexShaderStream.is_open()) {
-	string Line = "";
-	while (getline(VertexShaderStream, Line))
-		VertexShaderCode += "\n" + Line;
-	VertexShaderStream.close();
-}
-else {
-	printf("Impossible to open %s. Are you in the right directory ?\n", vertex_shader_path.c_str());
-	getchar();
-	exit(-1);
-}
-
-// Read the Fragment Shader code from the file
-string fragment_shader_path = "fragment.shader";
-std::string FragmentShaderCode;
-std::ifstream FragmentShaderStream(fragment_shader_path, std::ios::in);
-
-if (FragmentShaderStream.is_open()) {
-	std::string Line = "";
-	while (getline(FragmentShaderStream, Line))
-		FragmentShaderCode += "\n" + Line;
-	FragmentShaderStream.close();
-}
-else {
-	printf("Impossible to open %s. Are you in the right directory?\n", fragment_shader_path.c_str());
-	getchar();
-	exit(-1);
-}
-
-GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-char const * VertexSourcePointer = VertexShaderCode.c_str();
-glShaderSource(vertexShader, 1, &VertexSourcePointer, NULL);
-glCompileShader(vertexShader);
-// Check for compile time errors
-GLint success;
-GLchar infoLog[512];
-glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-if (!success)
-{
-	glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-	std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-}
-// Fragment shader
-GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-char const * FragmentSourcePointer = FragmentShaderCode.c_str();
-glShaderSource(fragmentShader, 1, &FragmentSourcePointer, NULL);
-glCompileShader(fragmentShader);
-// Check for compile time errors
-glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-if (!success)
-{
-	glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-	std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-}
-// Link shaders
-GLuint shaderProgram = glCreateProgram();
-glAttachShader(shaderProgram, vertexShader);
-glAttachShader(shaderProgram, fragmentShader);
-glLinkProgram(shaderProgram);
-// Check for linking errors
-glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-if (!success) {
-	glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-	std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-}
-glDeleteShader(vertexShader); //free up memory
-glDeleteShader(fragmentShader);
-
-glUseProgram(shaderProgram);
-
-//Show the picture that will be used
-CImg<float> picture("depth.bmp");
-CImgDisplay main_disp(picture, "The Depth Picture");
-
-cout << picture.size() << endl;
-//Pixel Data
-
-
-//iteration through the picture pixels without skips
-vector <glm::vec3> pictureData;
-//cout << "What is the skip-size desired?" << endl;
-//cin >> skipSize;
-
-for (int x = (0 - picture.width() / 2); x < (picture.width()) / 2; x++) {
-	for (int z = (0 - picture.height() / 2); z < (picture.height()) / 2; z++){
-		float height = static_cast<float>(*picture.data(x + (picture.width() / 2), z + (picture.height() / 2)));
-		pictureData.emplace_back(glm::vec3(x, height, z));
+	if (VertexShaderStream.is_open()) {
+		string Line = "";
+		while (getline(VertexShaderStream, Line))
+			VertexShaderCode += "\n" + Line;
+		VertexShaderStream.close();
 	}
-}
-	
+	else {
+		printf("Impossible to open %s. Are you in the right directory ?\n", vertex_shader_path.c_str());
+		getchar();
+		exit(-1);
+	}
+
+	// Read the Fragment Shader code from the file
+	string fragment_shader_path = "fragment.shader.shader";
+	std::string FragmentShaderCode;
+	std::ifstream FragmentShaderStream(fragment_shader_path, std::ios::in);
+
+	if (FragmentShaderStream.is_open()) {
+		std::string Line = "";
+		while (getline(FragmentShaderStream, Line))
+			FragmentShaderCode += "\n" + Line;
+		FragmentShaderStream.close();
+	}
+	else {
+		printf("Impossible to open %s. Are you in the right directory?\n", fragment_shader_path.c_str());
+		getchar();
+		exit(-1);
+	}
+
+	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	char const * VertexSourcePointer = VertexShaderCode.c_str();
+	glShaderSource(vertexShader, 1, &VertexSourcePointer, NULL);
+	glCompileShader(vertexShader);
+	// Check for compile time errors
+	GLint success;
+	GLchar infoLog[512];
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+	// Fragment shader
+	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	char const * FragmentSourcePointer = FragmentShaderCode.c_str();
+	glShaderSource(fragmentShader, 1, &FragmentSourcePointer, NULL);
+	glCompileShader(fragmentShader);
+	// Check for compile time errors
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+	// Link shaders
+	GLuint shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
+	glLinkProgram(shaderProgram);
+	// Check for linking errors
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+	if (!success) {
+		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+	}
+	glDeleteShader(vertexShader); //free up memory
+	glDeleteShader(fragmentShader);
+
+	glUseProgram(shaderProgram);
+
+	//Show the picture that will be used
+	CImg<float> picture("depth.bmp");
+	CImgDisplay main_disp(picture, "The Depth Picture");
+
+	cout << picture.size() << endl;
+	//Pixel Data
+
+
+	//iteration through the picture pixels without skips
+	vector <glm::vec3> pictureData;
+	//cout << "What is the skip-size desired?" << endl;
+	//cin >> skipSize;
+
+	for (int x = (0 - picture.width() / 2); x < (picture.width()) / 2; x++) {
+		for (int z = (0 - picture.height() / 2); z < (picture.height()) / 2; z++) {
+			float height = static_cast<float>(*picture.data(x + (picture.width() / 2), z + (picture.height() / 2)));
+			pictureData.emplace_back(glm::vec3(x, height, z));
+		}
+	}
+
 
 	GLuint VAO_pic, VBO_pic;
 	glGenVertexArrays(1, &VAO_pic);
@@ -207,12 +208,11 @@ for (int x = (0 - picture.width() / 2); x < (picture.width()) / 2; x++) {
 
 	//iteration through the picture pixels with skips
 	vector <glm::vec3> pictureDataSkip;
-
 	cout << "What is the skip-size desired?" << endl;
 	cin >> skipSize;
-	
-	for (int x = (0 - picture.width() / 2); x < (picture.width()) / 2; x+=skipSize) {
-		for (int z = (0 - picture.height() / 2); z < (picture.height()) / 2; z++) {
+
+	for (int x = (0 - picture.width() / 2); x < (picture.width()) / 2; x += skipSize) {
+		for (int z = (0 - picture.height() / 2); z < (picture.height()) / 2; z += skipSize) {
 			float height = static_cast<float>(*picture.data(x + (picture.width() / 2), z + (picture.height() / 2)));
 			pictureDataSkip.emplace_back(glm::vec3(x, height, z));
 		}
@@ -238,6 +238,9 @@ for (int x = (0 - picture.width() / 2); x < (picture.width()) / 2; x++) {
 	GLuint projectionLoc = glGetUniformLocation(shaderProgram, "projection_matrix");
 	GLuint viewMatrixLoc = glGetUniformLocation(shaderProgram, "view_matrix");
 	GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
+	GLuint object_type_loc = glGetUniformLocation(shaderProgram, "object_type");
+
+	glEnable(GL_BLEND | GL_DEPTH_TEST);
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -248,7 +251,7 @@ for (int x = (0 - picture.width() / 2); x < (picture.width()) / 2; x++) {
 		// Render
 		// Clear the colorbuffer
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glm::vec3 eye(cameraX, cameraY, cameraZ);
 		/*cout << "x" << cameraX << endl;
@@ -258,26 +261,38 @@ for (int x = (0 - picture.width() / 2); x < (picture.width()) / 2; x++) {
 		view_matrix = glm::lookAt(eye, center, up);
 
 		glm::mat4 model_matrix;
-		
+
 
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(model_matrix));
 		glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(view_matrix));
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection_matrix));
-		cout << skipOption << "HEHEHE" << endl;
+
 
 		if (skipOption == 0) {
+			glUniform1i(object_type_loc, 0);
 			glBindVertexArray(VAO_pic);
-			glDrawArrays(GL_POINTS, 0, pictureData.size());
+			if (polygonShape == 0) {
+				glDrawArrays(GL_POINTS, 0, pictureData.size());
+			}
+			if (polygonShape == 1) {
+				glDrawArrays(GL_TRIANGLES, 0, pictureData.size());
+			}
 			glBindVertexArray(0);
 		}
-		if(skipOption == 1){
+		if (skipOption == 1) {
+			glUniform1i(object_type_loc, 0);
 			glBindVertexArray(VAO_skipSize);
-			glDrawArrays(GL_POINTS, 0, pictureDataSkip.size());
+			if (polygonShape == 0) {
+				glDrawArrays(GL_POINTS, 0, pictureDataSkip.size());
+			}
+			if (polygonShape == 1) {
+				glDrawArrays(GL_TRIANGLES, 0, pictureDataSkip.size());
+			}
 			glBindVertexArray(0);
 		}
 
 
-		
+
 		glfwSwapBuffers(window);
 	}
 
@@ -314,6 +329,21 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key == GLFW_KEY_N && action == GLFW_PRESS) {
 		skipOption = 1;
 	}
+	if (key == GLFW_KEY_A && action == GLFW_PRESS) {
+		polygonShape = 0;
+	}
+	if (key == GLFW_KEY_S && action == GLFW_PRESS) {
+		polygonShape = 1;
+	}
+	if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS) {
+		skipOption = 0;
+		polygonShape = 0;
+		cameraX = 550.0f;
+		cameraY = 520.0f;
+		cameraZ = 530.0f;
+
+	}
+
 }
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	projection_matrix = glm::perspective(45.0f, (GLfloat)width / (GLfloat)height, 0.0f, 100.0f);
