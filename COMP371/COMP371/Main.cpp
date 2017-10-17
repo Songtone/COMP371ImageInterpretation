@@ -203,15 +203,7 @@ int main()
 		for (int z = (0 - picture.height() / 2); z < (picture.height()) / 2; z++) {
 			float height = static_cast<float>(*picture.data(x + (picture.width() / 2), z + (picture.height() / 2)));
 			pictureData.emplace_back(glm::vec3(x, height, z));
-			/*if (height < 70) {
-				pictureDataLow.emplace_back(glm::vec3(0.2, 0.0, 0.7));
-			}
-			if (height >= 70 && height < 150) {
-				pictureDataMedium.emplace_back(glm::vec3(0.6, 0.2, 0.3));
-			}
-			if (height >= 150) {
-				pictureDataHigh.emplace_back(glm::vec3(0.3, 0.8, 0.0));
-			}*/
+			
 			
 		}
 	}
@@ -220,10 +212,7 @@ int main()
 	GLuint VAO_pic, VBO_pic/*, VBO_pic_high, VBO_pic_medium, VBO_pic_low*/;
 	glGenVertexArrays(1, &VAO_pic);
 	glGenBuffers(1, &VBO_pic);
-	/*glGenBuffers(1, &VBO_pic_high);
-	glGenBuffers(1, &VBO_pic_medium);
-	glGenBuffers(1, &VBO_pic_low);
-*/
+	
 
 	// Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
 	glBindVertexArray(VAO_pic);
@@ -232,21 +221,6 @@ int main()
 	glBufferData(GL_ARRAY_BUFFER, pictureData.size() * sizeof(glm::vec3), &pictureData.front(), GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
-
-	/*glBindBuffer(GL_ARRAY_BUFFER, VBO_pic_high);
-	glBufferData(GL_ARRAY_BUFFER, pictureDataHigh.size() * sizeof(glm::vec3), &pictureDataHigh.front(), GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO_pic_medium);
-	glBufferData(GL_ARRAY_BUFFER, pictureDataMedium.size() * sizeof(glm::vec3), &pictureDataMedium.front(), GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO_pic_low);
-	glBufferData(GL_ARRAY_BUFFER, pictureDataLow.size() * sizeof(glm::vec3), &pictureDataLow.front(), GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);*/
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -340,12 +314,6 @@ int main()
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//glm::vec3 eye(cameraX, cameraY, cameraZ);
-		//cout << "x" << cameraX << endl;
-		//cout << "y" << cameraY << endl;
-		//cout << "z" << cameraZ << endl;*/
-		//glm::mat4 view_matrix;
-		//view_matrix = glm::lookAt(eye, center, up);
 
 		// pass projection matrix to shader (note that in this case it could change every frame)
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);

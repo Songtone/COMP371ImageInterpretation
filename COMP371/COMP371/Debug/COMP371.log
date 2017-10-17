@@ -2,13 +2,13 @@
   Main.cpp
 c:\program files (x86)\windows kits\10\include\10.0.15063.0\shared\minwindef.h(130): warning C4005: 'APIENTRY': macro redefinition
   c:\users\songt\desktop\comp371\comp371a2image\comp371\glfw\glfw3.h(85): note: see previous definition of 'APIENTRY'
-c:\users\songt\desktop\comp371\comp371a2image\comp371\comp371\main.cpp(328): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\songt\desktop\comp371\comp371a2image\comp371\comp371\main.cpp(462): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\songt\desktop\comp371\comp371a2image\comp371\comp371\main.cpp(463): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\songt\desktop\comp371\comp371a2image\comp371\comp371\main.cpp(467): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\songt\desktop\comp371\comp371a2image\comp371\comp371\main.cpp(468): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\songt\desktop\comp371\comp371a2image\comp371\comp371\main.cpp(470): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\songt\desktop\comp371\comp371a2image\comp371\comp371\main.cpp(471): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\songt\desktop\comp371\comp371a2image\comp371\comp371\main.cpp(302): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\songt\desktop\comp371\comp371a2image\comp371\comp371\main.cpp(430): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\songt\desktop\comp371\comp371a2image\comp371\comp371\main.cpp(431): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\songt\desktop\comp371\comp371a2image\comp371\comp371\main.cpp(435): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\songt\desktop\comp371\comp371a2image\comp371\comp371\main.cpp(436): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\songt\desktop\comp371\comp371a2image\comp371\comp371\main.cpp(438): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\songt\desktop\comp371\comp371a2image\comp371\comp371\main.cpp(439): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/FORCE' specification
   COMP371.vcxproj -> C:\Users\songt\Desktop\COMP371\COMP371A2Image\COMP371\Debug\COMP371.exe
   COMP371.vcxproj -> C:\Users\songt\Desktop\COMP371\COMP371A2Image\COMP371\Debug\COMP371.pdb (Partial PDB)
