@@ -279,7 +279,7 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		if (skipAgain == 1) {//to ask the user a skip size while program is running
-			vector <glm::vec3> pictureDataSkip;
+			pictureDataSkip.clear();
 			cout << "What is the skip-size desired?" << endl;
 			cin >> skipSize;
 
