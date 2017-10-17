@@ -26,8 +26,17 @@ glm::vec3 camera_position;
 glm::vec3 triangle_scale;
 glm::mat4 projection_matrix;
 
+//variables
+int skipSize = 1;
+int skipOption = 1;
+int skipAgain = 0;
+int polygonShape = 0;
+float cameraX = 150.0f;
+float cameraY = 200.0f;
+float cameraZ = 100.0f;
+
 // camera
-Camera camera(glm::vec3(150.0f, 300.0f, 100.0f));
+Camera camera(glm::vec3(cameraX, cameraY, cameraZ));
 float lastX = WIDTH / 2.0f;
 float lastY = HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -35,16 +44,6 @@ bool firstMouse = true;
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
-
-//variables
-int skipSize;
-int skipOption = 1;
-int skipAgain = 0;
-int polygonShape = 0;
-float cameraX = 550.0f;
-float cameraY = 520.0f;
-float cameraZ = 530.0f;
-float panning = 0.0f;
 
 // Constant vectors
 const glm::vec3 center(0.0f, 0.0f, 0.0f);
@@ -193,23 +192,15 @@ int main()
 
 	//iteration through the picture pixels without skips
 	vector <glm::vec3> pictureData;
-	vector <glm::vec3> pictureDataHigh;
-	vector <glm::vec3> pictureDataMedium;
-	vector <glm::vec3> pictureDataLow;
-	//cout << "What is the skip-size desired?" << endl;
-	//cin >> skipSize;
 
 	for (int x = (0 - picture.width() / 2); x < (picture.width()) / 2; x++) {
 		for (int z = (0 - picture.height() / 2); z < (picture.height()) / 2; z++) {
 			float height = static_cast<float>(*picture.data(x + (picture.width() / 2), z + (picture.height() / 2)));
-			pictureData.emplace_back(glm::vec3(x, height, z));
-			
-			
+			pictureData.emplace_back(glm::vec3(x, height, z));	
 		}
 	}
 
-
-	GLuint VAO_pic, VBO_pic/*, VBO_pic_high, VBO_pic_medium, VBO_pic_low*/;
+	GLuint VAO_pic, VBO_pic;
 	glGenVertexArrays(1, &VAO_pic);
 	glGenBuffers(1, &VBO_pic);
 	
@@ -222,6 +213,8 @@ int main()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
 
+	
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
@@ -232,13 +225,10 @@ int main()
 	vector <glm::vec3> pictureDataSkip;
 	cout << "What is the skip-size desired?" << endl;
 	cin >> skipSize;
-
-	for (int x = (0 - picture.width() / 2); x < (picture.width()) / 2; x += skipSize) {
-		for (int z = (0 - picture.height() / 2); z < (picture.height()) / 2; z += skipSize) {
-			float height = static_cast<float>(*picture.data(x + (picture.width() / 2), z + (picture.height() / 2)));
-			pictureDataSkip.emplace_back(glm::vec3(x, height, z));
+	for (int i = 0; i < pictureData.size();i+=skipSize){
+			pictureDataSkip.emplace_back(pictureData[i]);
 		}
-	}
+	
 
 	GLuint VAO_skipSize, VBO_skipSize;
 	glGenVertexArrays(1, &VAO_skipSize);
@@ -251,6 +241,10 @@ int main()
 	glBufferData(GL_ARRAY_BUFFER, pictureDataSkip.size() * sizeof(glm::vec3), &pictureDataSkip.front(), GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
+
+	/*glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*indices.size(), &indices[0], GL_STATIC_DRAW);*/
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -271,14 +265,9 @@ int main()
 			pictureDataSkip.clear();
 			cout << "What is the skip-size desired?" << endl;
 			cin >> skipSize;
-
-			for (int x = (0 - picture.width() / 2); x < (picture.width()) / 2; x += skipSize) {
-				for (int z = (0 - picture.height() / 2); z < (picture.height()) / 2; z += skipSize) {
-					float height = static_cast<float>(*picture.data(x + (picture.width() / 2), z + (picture.height() / 2)));
-					pictureDataSkip.emplace_back(glm::vec3(x, height, z));
-				}
+			for (int i = 0; i < pictureData.size(); i += skipSize) {
+				pictureDataSkip.emplace_back(pictureData[i]);
 			}
-
 			GLuint VAO_skipSize, VBO_skipSize;
 			glGenVertexArrays(1, &VAO_skipSize);
 			glGenBuffers(1, &VBO_skipSize);
@@ -293,7 +282,8 @@ int main()
 
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-			glBindVertexArray(0);
+			glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
+
 			skipAgain = 0;// Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
 		}
 
@@ -400,9 +390,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		skipOption = 0;
 		skipAgain = 1;
 		polygonShape = 0;
-		cameraX = 550.0f;
-		cameraY = 520.0f;
-		cameraZ = 530.0f;
+		cameraX = 150.0f;
+		cameraY = 200.0f;
+		cameraZ = 100.0f;
 
 	}
 
