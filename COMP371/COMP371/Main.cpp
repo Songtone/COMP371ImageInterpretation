@@ -27,7 +27,7 @@ glm::vec3 triangle_scale;
 glm::mat4 projection_matrix;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(150.0f, 300.0f, 100.0f));
 float lastX = WIDTH / 2.0f;
 float lastY = HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -341,7 +341,7 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//glm::vec3 eye(cameraX, cameraY, cameraZ);
-		///*cout << "x" << cameraX << endl;
+		//cout << "x" << cameraX << endl;
 		//cout << "y" << cameraY << endl;
 		//cout << "z" << cameraZ << endl;*/
 		//glm::mat4 view_matrix;
