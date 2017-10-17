@@ -356,24 +356,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 {
 	std::cout << key << std::endl;
 
-	if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
-		cameraY = cameraY + 10.0f;
-	}
-	if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
-		cameraY = cameraY - 10.0f;
-	}
-	if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
-		cameraX = cameraX + 10.0f;
-	}
-	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
-		cameraX = cameraX - 10.0f;
-	}
-	if (key == GLFW_KEY_J && action == GLFW_PRESS) {
-		cameraZ = cameraZ + 10.0f;
-	}
-	if (key == GLFW_KEY_U && action == GLFW_PRESS) {
-		cameraZ = cameraZ - 10.0f;
-	}
 	if (key == GLFW_KEY_M && action == GLFW_PRESS) {
 		skipOption = 0;
 	}
