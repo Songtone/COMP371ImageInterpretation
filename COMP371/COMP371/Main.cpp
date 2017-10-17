@@ -14,6 +14,7 @@
 #include "gtc/type_ptr.hpp"
 #include "objloader.hpp"  //include the object loader
 #include "CImg.h"
+#include "camera.h"
 
 using namespace std;
 using namespace cimg_library;
